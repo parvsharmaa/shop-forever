@@ -1,3 +1,5 @@
+import { assets } from '../assets/assets';
+
 const Billboard = () => {
   return (
     <div className='flex flex-col sm:flex-row border border-gray-400'>
@@ -17,6 +19,8 @@ const Billboard = () => {
           </div>
         </div>
       </div>
+      {/* Right */}
+      <img src={assets.billboard} alt='' className='w-full sm:w-1/2' />
     </div>
   );
 };
