@@ -43,7 +43,7 @@ const Navbar = () => {
         </div>
         <Link to='/cart' className='relative'>
           <FaShoppingCart className='w-5  min-w-5' />
-          <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-slate-200 text-black aspect-square rounded-full text-[8px]'>
+          <p className='absolute right-[-6px] top-[-10px] w-4 text-center leading-4 bg-slate-200 text-black aspect-square rounded-full text-[8px]'>
             10
           </p>
         </Link>
