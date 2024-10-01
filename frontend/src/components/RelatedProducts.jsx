@@ -17,7 +17,7 @@ const RelatedProducts = ({ productId }) => {
       );
       setRelated(relatedProducts.slice(0, 5));
     }
-  }, [products]);
+  }, [products, productId]);
 
   return (
     <div className='my-24'>

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import { products } from '../assets/assets';
 
 export const ShopContext = createContext();
@@ -19,9 +19,9 @@ const ShopContextProvider = ({ children }) => {
     setCartItems(cartData);
   };
 
-  useEffect(() => {
-    console.log(cartItems);
-  });
+  const getCartCount = () => {
+    return Object.values(cartItems).reduce((acc, curr) => acc + curr, 0);
+  };
 
   const value = {
     products,
@@ -29,6 +29,7 @@ const ShopContextProvider = ({ children }) => {
     delivery_fee,
     cartItems,
     addToCart,
+    getCartCount,
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

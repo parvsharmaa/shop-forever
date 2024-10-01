@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import { FaSearch, FaUser, FaShoppingCart } from 'react-icons/fa';
 import { FiMenu } from 'react-icons/fi';
 import { IoIosArrowDropdown } from 'react-icons/io';
+import { ShopContext } from '../context/ShopContext';
 
 const Navbar = () => {
+  const { getCartCount } = useContext(ShopContext);
   const [visible, setVisible] = useState(false);
 
   return (
@@ -44,7 +46,7 @@ const Navbar = () => {
         <Link to='/cart' className='relative'>
           <FaShoppingCart className='w-5  min-w-5' />
           <p className='absolute right-[-6px] top-[-10px] w-4 text-center leading-4 bg-slate-200 text-black aspect-square rounded-full text-[8px]'>
-            10
+            {getCartCount()}
           </p>
         </Link>
         <FiMenu
