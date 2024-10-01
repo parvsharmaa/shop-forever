@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Checkout from './pages/Checkout';
 import Orders from './pages/Orders';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/orders' element={<Orders />} />
       </Routes>
+      <Footer />
     </div>
   );
 };
