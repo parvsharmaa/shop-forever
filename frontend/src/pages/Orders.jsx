@@ -1,9 +1,45 @@
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import Title from '../components/Title';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Orders = () => {
-  const { products, currency } = useContext(ShopContext);
+  const { backendUrl, token, currency } = useContext(ShopContext);
+  const [orderData, setOrderData] = useState([]);
+
+  const fetchOrders = async () => {
+    try {
+      if (!token) {
+        return null;
+      }
+      const response = await axios.get(`${backendUrl}/order/userorders`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.data.success) {
+        let allOrderItems = [];
+
+        response.data.orders.map((order) => {
+          order.items.map((item) => {
+            item['status'] = order.status;
+            item['paymentMethod'] = order.paymentMethod;
+            item['date'] = order.date;
+
+            allOrderItems.push(item);
+          });
+        });
+        setOrderData(allOrderItems.reverse());
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, [token]);
 
   return (
     <div className='border-t pt-16'>
@@ -12,7 +48,7 @@ const Orders = () => {
       </div>
 
       <div>
-        {products.slice(1, 4).map((item, index) => {
+        {orderData.map((item, index) => {
           return (
             <div
               key={index}
@@ -27,17 +63,24 @@ const Orders = () => {
                       {currency}
                       {item.price}
                     </p>
-                    <p>Quantity: 1</p>
+                    <p>Quantity: {item.quantity}</p>
                   </div>
-                  <p className='mt-2'>
-                    Date: <span className='text-gray-400'>25 July, 2024</span>
+                  <p className='mt-1'>
+                    {`Date : `}
+                    <span className='text-gray-400'>
+                      {new Date(item.date).toDateString()}
+                    </span>
+                  </p>
+                  <p className='mt-1'>
+                    {`Payment Method : `}
+                    <span className='text-gray-400'>{item.paymentMethod}</span>
                   </p>
                 </div>
               </div>
               <div className='md:w-1/2 flex justify-between'>
                 <div className='flex items-center gap-2'>
                   <p className='min-w-2 h-2 rounded-full bg-green-500'></p>
-                  <p className='text-sm md:text-base '>Ready to Ship</p>
+                  <p className='text-sm md:text-base '>{item.status}</p>
                 </div>
                 <button className='bg-black text-white border px-4 py-2 text-sm font-medium rounded-sm hover:bg-gray-700'>
                   Track Order

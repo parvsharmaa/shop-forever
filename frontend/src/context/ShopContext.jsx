@@ -43,7 +43,7 @@ const ShopContextProvider = ({ children }) => {
     }
   };
 
-  const updateQuantity = (itemId, quantity) => {
+  const updateQuantity = async (itemId, quantity) => {
     let cartData = structuredClone(cartItems);
     if (quantity === 0) {
       delete cartData[itemId];
@@ -51,6 +51,22 @@ const ShopContextProvider = ({ children }) => {
       cartData[itemId] = quantity;
     }
     setCartItems(cartData);
+
+    // Now if we're logged in, update to cart to database too
+    if (token) {
+      try {
+        await axios.post(
+          `${backendUrl}/cart/update`,
+          { itemId, quantity },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+      } catch (error) {
+        console.log(error);
+        toast.error('Failed to update cart. Please try again later.');
+      }
+    }
   };
 
   const getCartCount = () => {
@@ -114,6 +130,7 @@ const ShopContextProvider = ({ children }) => {
     currency,
     delivery_fee,
     cartItems,
+    setCartItems,
     addToCart,
     getCartCount,
     updateQuantity,
