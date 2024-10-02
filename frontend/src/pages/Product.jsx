@@ -13,7 +13,7 @@ const Product = () => {
   useEffect(() => {
     const fetchProductData = async () => {
       products.map((item) => {
-        if (item.id.toString() === productId) {
+        if (item._id === productId) {
           setProductData(item);
           setImage(item.image);
           return null;
@@ -82,7 +82,7 @@ const Product = () => {
             </div>
           </div>
           <button
-            onClick={() => addToCart(productData.id)}
+            onClick={() => addToCart(productData._id)}
             className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'
           >
             ADD TO CART

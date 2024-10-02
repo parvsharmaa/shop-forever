@@ -29,7 +29,7 @@ const Cart = () => {
         {cartData.length > 0 ? (
           cartData.map((item, index) => {
             const productData = products.find(
-              (product) => product.id.toString() === item.id.toString()
+              (product) => product._id.toString() === item.id.toString()
             );
             return (
               <div

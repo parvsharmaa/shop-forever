@@ -10,10 +10,10 @@ const RelatedProducts = ({ productId }) => {
   useEffect(() => {
     if (products.length > 0) {
       const currentProduct = products.find(
-        (product) => product.id.toString() === productId
+        (product) => product._id.toString() === productId
       );
       const relatedProducts = products.filter(
-        (product) => product.id !== currentProduct.id
+        (product) => product._id !== currentProduct._id
       );
       setRelated(relatedProducts.slice(0, 5));
     }
@@ -29,7 +29,7 @@ const RelatedProducts = ({ productId }) => {
           return (
             <ProductItem
               key={index}
-              id={item.id}
+              id={item._id}
               name={item.title}
               image={item.image}
               price={item.price}
