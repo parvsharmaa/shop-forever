@@ -81,4 +81,22 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser };
+const adminLogin = (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (
+      email !== process.env.ADMIN_EMAIL ||
+      password !== process.env.ADMIN_PASSWORD
+    ) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Invalid credentials' });
+    }
+    const token = createToken(process.env.ADMIN_ID);
+    res.json({ success: true, message: 'Admin logged in successfully', token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+export { loginUser, registerUser, adminLogin };
