@@ -12,6 +12,7 @@ const ShopContextProvider = ({ children }) => {
 
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
+  const [token, setToken] = useState('');
 
   const navigate = useNavigate();
 
@@ -66,6 +67,12 @@ const ShopContextProvider = ({ children }) => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    if (!token && localStorage.getItem('token')) {
+      setToken(localStorage.getItem('token'));
+    }
+  }, [token]);
+
   const value = {
     products,
     currency,
@@ -77,6 +84,8 @@ const ShopContextProvider = ({ children }) => {
     getCartAmount,
     navigate,
     backendUrl,
+    token,
+    setToken,
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

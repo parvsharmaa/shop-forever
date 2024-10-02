@@ -15,14 +15,12 @@ const registerUser = async (req, res) => {
     const userExists = await User.findOne({ email });
     console.log(userExists);
     if (userExists) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'User already exists' });
+      return res.json({ success: false, message: 'User already exists' });
     }
 
     // validate email & password
     if (!validator.isEmail(email)) {
-      return res.status(400).json({ success: false, message: 'Invalid email' });
+      return res.json({ success: false, message: 'Invalid email' });
     }
     if (password.length < 8) {
       return res.status(400).json({
@@ -42,12 +40,10 @@ const registerUser = async (req, res) => {
     // generate and send jwt token to client
     const token = createToken(user._id);
 
-    res
-      .status(201)
-      .json({ success: true, message: 'User registered successfully', token });
+    res.json({ success: true, message: 'User registered successfully', token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.json({ success: false, message: 'Server error' });
   }
 };
 
@@ -58,17 +54,13 @@ const loginUser = async (req, res) => {
     // check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'User not found' });
+      return res.json({ success: false, message: 'User not found' });
     }
 
     // validate password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'Invalid credentials' });
+      return res.json({ success: false, message: 'Invalid credentials' });
     }
 
     // generate and send jwt token to client
@@ -77,7 +69,7 @@ const loginUser = async (req, res) => {
     res.json({ success: true, message: 'User logged in successfully', token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.json({ success: false, message: 'Server error' });
   }
 };
 
@@ -88,15 +80,13 @@ const adminLogin = (req, res) => {
       email !== process.env.ADMIN_EMAIL ||
       password !== process.env.ADMIN_PASSWORD
     ) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'Invalid credentials' });
+      return res.json({ success: false, message: 'Invalid credentials' });
     }
     const token = createToken(process.env.ADMIN_ID);
     res.json({ success: true, message: 'Admin logged in successfully', token });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.json({ success: false, message: 'Server error' });
   }
 };
 export { loginUser, registerUser, adminLogin };
