@@ -89,4 +89,21 @@ const adminLogin = (req, res) => {
     res.json({ success: false, message: 'Server error' });
   }
 };
-export { loginUser, registerUser, adminLogin };
+
+const getUserCoupon = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await User.findById(userId);
+    const coupon =
+      user.activeCoupon && user.activeCoupon.valid && user.activeCoupon.code;
+    if (!coupon) {
+      return res.json({ success: false, message: 'No accoupon available!' });
+    }
+    res.json({ success: true, coupon });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: 'Server error' });
+  }
+};
+
+export { loginUser, registerUser, adminLogin, getUserCoupon };

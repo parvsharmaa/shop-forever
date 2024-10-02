@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     cart: { type: Object, default: {} },
+    activeCoupon: {
+      code: { type: String },
+      valid: { type: Boolean },
+    },
   },
   { minimize: false }
 );

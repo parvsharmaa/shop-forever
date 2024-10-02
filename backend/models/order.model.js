@@ -8,6 +8,8 @@ const orderSchema = new mongoose.Schema({
   date: { type: Number, required: true },
   status: { type: String, required: true, default: 'Order Placed' },
   paymentMethod: { type: String, required: true, default: 'COD' },
+  couponCode: { type: String, default: null },
+  discountAmount: { type: Number, default: 0 },
 });
 
 const Order = mongoose.model('Order', orderSchema);

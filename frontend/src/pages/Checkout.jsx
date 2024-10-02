@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import CartTotal from '../components/CartTotal';
 import Title from '../components/Title';
 import { ShopContext } from '../context/ShopContext';
@@ -17,6 +17,8 @@ const Checkout = () => {
     products,
   } = useContext(ShopContext);
   const [method, setMethod] = useState('cod');
+  const [coupon, setCoupon] = useState(null);
+  const [couponApplied, setCouponApplied] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -28,6 +30,24 @@ const Checkout = () => {
     country: '',
     phone: '',
   });
+
+  const fetchCoupon = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/user/coupon`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.data.success) {
+        setCoupon(response.data.coupon);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchCoupon();
+  }, []);
 
   const onChangeHandler = (e) => {
     const name = e.target.name;
@@ -60,6 +80,8 @@ const Checkout = () => {
           address: formData,
           items: orderItems,
           amount: getCartAmount() + delivery_fee,
+          discountAmount: getCartAmount() * 0.1, // 10% discount
+          discountCode: coupon,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -172,10 +194,34 @@ const Checkout = () => {
 
       {/* Right */}
       <div className='mt-8'>
+        {/* Discount Coupon */}
+        {coupon && (
+          <div className='mt-12'>
+            <Title text1={'DISCOUNT'} text2={'COUPON'} />
+            <div className='flex gap-3 flex-col lg:flex-row'>
+              <div
+                onClick={() => setCouponApplied(!couponApplied)}
+                className='flex items-center gap-3 border p-2 px-3 cursor-pointer'
+              >
+                <p
+                  className={`min-w-3.5 h-3.5 border rounded-full ${
+                    couponApplied ? 'bg-green-400' : ''
+                  }`}
+                ></p>
+                <p className='text-gray-500 text-sm font-medium mx-4'>
+                  You have a 10% discount coupon available. <b>Apply it now!</b>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Cart Summary */}
         <div className='mt-8 min-w-80'>
-          <CartTotal />
+          <CartTotal couponApplied={couponApplied} />
         </div>
 
+        {/* Payment */}
         <div className='mt-12'>
           <Title text1={'PAYMENT'} text2={'METHOD'} />
           <div className='flex gap-3 flex-col lg:flex-row'>

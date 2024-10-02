@@ -5,7 +5,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const Orders = () => {
-  const { backendUrl, token, currency } = useContext(ShopContext);
+  const { backendUrl, token, currency, delivery_fee } = useContext(ShopContext);
   const [orderData, setOrderData] = useState([]);
 
   const fetchOrders = async () => {
@@ -19,15 +19,23 @@ const Orders = () => {
       if (response.data.success) {
         let allOrderItems = [];
 
-        response.data.orders.map((order) => {
+        response.data.orders.map((order, index) => {
           order.items.map((item) => {
             item['status'] = order.status;
             item['paymentMethod'] = order.paymentMethod;
             item['date'] = order.date;
+            // calculate per item price split
+            item['price'] = (
+              (order.couponCode ? item['price'] * 0.9 : item['price']) +
+              delivery_fee / order.items.length
+            ).toFixed(2);
+            // transforming order number
+            item['orderId'] = index + 1;
 
             allOrderItems.push(item);
           });
         });
+
         setOrderData(allOrderItems.reverse());
       } else {
         toast.error(response.data.message);
@@ -57,7 +65,9 @@ const Orders = () => {
               <div className='flex items-start gap-6 text-sm'>
                 <img className='w-16 sm:w-20' src={item.image} alt='' />
                 <div>
-                  <p className='text-base font-medium'>{item.title}</p>
+                  <p className='text-base font-medium'>
+                    Order #{item.orderId} - {item.title}
+                  </p>
                   <div className='flex items-center gap-3 mt-2 text-base text-gray-700'>
                     <p className='text-lg'>
                       {currency}
@@ -68,7 +78,11 @@ const Orders = () => {
                   <p className='mt-1'>
                     {`Date : `}
                     <span className='text-gray-400'>
-                      {new Date(item.date).toDateString()}
+                      {new Date(item.date).toLocaleDateString('en-GB', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
                     </span>
                   </p>
                   <p className='mt-1'>
