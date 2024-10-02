@@ -25,6 +25,22 @@ const ShopContextProvider = ({ children }) => {
       cartData[itemId] = 1;
     }
     setCartItems(cartData);
+
+    // Now if we're logged in, update to cart to database too
+    if (token) {
+      try {
+        await axios.post(
+          `${backendUrl}/cart/add`,
+          { itemId },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+      } catch (error) {
+        console.log(error);
+        toast.error('Failed to update cart. Please try again later.');
+      }
+    }
   };
 
   const updateQuantity = (itemId, quantity) => {
@@ -63,6 +79,25 @@ const ShopContextProvider = ({ children }) => {
     }
   };
 
+  const getUserCart = async (token) => {
+    try {
+      const response = await axios.post(
+        `${backendUrl}/cart/get`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.data.success) {
+        setCartItems(response.data.cart);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -70,6 +105,7 @@ const ShopContextProvider = ({ children }) => {
   useEffect(() => {
     if (!token && localStorage.getItem('token')) {
       setToken(localStorage.getItem('token'));
+      getUserCart(localStorage.getItem('token'));
     }
   }, [token]);
 
