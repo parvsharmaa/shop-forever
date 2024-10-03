@@ -4,12 +4,17 @@ import {
   updateCart,
   getUserCart,
 } from '../controllers/cart.contoller.js';
-import authUser from '../middleware/auth.js';
+import { userAuth } from '../middleware/auth.js';
 
 const cartRouter = express.Router();
 
-cartRouter.post('/add', authUser, addToCart);
-cartRouter.post('/get', authUser, getUserCart);
-cartRouter.post('/update', authUser, updateCart);
+// Add item to cart (protected by userAuth middleware)
+cartRouter.post('/add', userAuth, addToCart);
+
+// Get user cart (protected by userAuth middleware)
+cartRouter.post('/get', userAuth, getUserCart);
+
+// Update user cart (protected by userAuth middleware)
+cartRouter.post('/update', userAuth, updateCart);
 
 export default cartRouter;

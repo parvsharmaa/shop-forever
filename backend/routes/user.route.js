@@ -1,17 +1,20 @@
 import express from 'express';
 import {
-  adminLogin,
   loginUser,
   registerUser,
   getUserCoupon,
 } from '../controllers/user.controller.js';
-import authUser from '../middleware/auth.js';
+import { userAuth } from '../middleware/auth.js';
 
 const userRouter = express.Router();
 
+// User Registration
 userRouter.post('/register', registerUser);
+
+// User Login
 userRouter.post('/login', loginUser);
-userRouter.post('/admin', adminLogin);
-userRouter.get('/coupon', authUser, getUserCoupon);
+
+// Get User Coupon (protected by userAuth middleware)
+userRouter.get('/coupon', userAuth, getUserCoupon);
 
 export default userRouter;

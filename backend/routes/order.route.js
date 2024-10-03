@@ -1,19 +1,13 @@
 import express from 'express';
-import {
-  placeOrder,
-  userOrders,
-  allOrders,
-} from '../controllers/order.controller.js';
-import adminAuth from '../middleware/admin.auth.js';
-import authUser from '../middleware/auth.js';
+import { placeOrder, userOrders } from '../controllers/order.controller.js';
+import { userAuth } from '../middleware/auth.js';
 
 const orderRouter = express.Router();
 
-// admin
-orderRouter.post('/list', adminAuth, allOrders);
+// Place an order (protected by userAuth middleware)
+orderRouter.post('/place', userAuth, placeOrder);
 
-// user
-orderRouter.post('/place', authUser, placeOrder);
-orderRouter.get('/userorders', authUser, userOrders);
+// Fetch user orders (protected by userAuth middleware)
+orderRouter.get('/userorders', userAuth, userOrders);
 
 export default orderRouter;

@@ -6,24 +6,34 @@ import {
   N,
 } from '../services/coupon.service.js';
 
+/*
+  placeOrder:
+  - Handles order placement for a user.
+  - Validates and applies discount coupons if provided.
+  - Generates new coupons when applicable (every Nth order).
+  - Resets user's cart after successful order placement.
+*/
 const placeOrder = async (req, res) => {
   try {
+    // Destructure request body parameters
     const { userId, items, amount, address, discountCode, discountAmount } =
       req.body;
 
+    // Fetch user data based on userId
     const user = await User.findById(userId);
 
-    // Check if the user has placed enough orders to receive a coupon
+    // Get the total number of orders placed by the user
     const orderCount = await Order.countDocuments({ userId });
 
-    // Apply discount if a valid coupon is provided
+    // If a discount code is provided, validate it
     if (discountCode) {
-      // if validation succeeded, proceed to logic
+      // Validate the provided coupon
       if (validateCoupon(user, discountCode)) {
-        // Mark the coupon as used
+        // If the coupon is valid, mark it as used
         user.activeCoupon.valid = false;
         await user.save();
       } else {
+        // Return a failure response if the coupon is not valid
         return res.json({
           success: false,
           message: 'Coupon not valid!',
@@ -31,22 +41,23 @@ const placeOrder = async (req, res) => {
       }
     }
 
-    // Create the order in the database
+    // Create a new order object and calculate the final amount after discount
     const newOrder = new Order({
       userId,
       items,
-      amount: amount - discountAmount,
+      amount: amount - discountAmount, // Subtract discount amount
       address,
       date: Date.now(),
       couponCode: discountCode,
       discountAmount,
     });
 
-    // Save the new order
+    // Save the new order to the database
     await newOrder.save();
 
-    // Generate a coupon for the next nth order
+    // Generate a new coupon for the user after every Nth order
     if ((orderCount + 1) % N === 0) {
+      // Generate a new coupon code and assign it to the user
       user.activeCoupon = {
         code: generateCouponCode(),
         valid: true,
@@ -54,37 +65,41 @@ const placeOrder = async (req, res) => {
       await user.save();
     }
 
-    // Reset user's cart
+    // Clear the user's cart after order placement
     await User.findByIdAndUpdate(userId, { cart: {} });
 
+    // Send a success response including details of coupon generation
     res.json({
       success: true,
       message: 'Order placed successfully',
-      discountApplied: discountAmount > 0,
-      couponGenerated: user.activeCoupon ? user.activeCoupon.code : null,
+      discountApplied: discountAmount > 0, // Indicate whether a discount was applied
+      couponGenerated: user.activeCoupon ? user.activeCoupon.code : null, // Return new coupon if generated
     });
   } catch (error) {
     console.error(error);
+    // Handle server errors
     res.json({ success: false, message: 'Server error' });
   }
 };
 
-const allOrders = async (req, res) => {
-  try {
-    const orders = await Order.find({});
-    res.json({ success: true, orders });
-  } catch (error) {
-    console.error(error);
-    res.json({ success: false, message: 'Server error' });
-  }
-};
-
+/*
+  userOrders:
+  - Fetches all orders placed by a specific user.
+*/
 const userOrders = async (req, res) => {
   try {
     const { userId } = req.body;
+
+    // Fetch all orders related to the specific user
     const orders = await Order.find({ userId });
+
+    // Send the user's orders in the response
     res.json({ success: true, orders });
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+    // Handle server errors
+    res.json({ success: false, message: 'Server error' });
+  }
 };
 
-export { placeOrder, userOrders, allOrders };
+export { placeOrder, userOrders };

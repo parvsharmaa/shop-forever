@@ -1,16 +1,20 @@
 import express from 'express';
 import {
+  adminLogin,
   generateDiscount,
   storeStats,
 } from '../controllers/admin.controller.js';
-import adminAuth from '../middleware/admin.auth.js';
+import { adminAuth } from '../middleware/auth.js';
 
-const router = express.Router();
+const adminRouter = express.Router();
 
-// Generate discount for user
-router.post('/generate-discount', adminAuth, generateDiscount);
+// Admin Login route (no authentication required)
+adminRouter.post('/login', adminLogin);
 
-// Get store stats
-router.get('/stats', adminAuth, storeStats);
+// Generate discount for a user (admin authentication required)
+adminRouter.post('/generate-discount', adminAuth, generateDiscount);
 
-export default router;
+// Get store stats (admin authentication required)
+adminRouter.get('/stats', adminAuth, storeStats);
+
+export default adminRouter;
