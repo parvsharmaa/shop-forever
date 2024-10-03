@@ -22,6 +22,8 @@ This is a fully functional e-commerce web application built using React for the 
 - **Validation**: Validator
 - **Styling**: Tailwind CSS
 
+Note : For Credentials, access environment variable files
+
 ## API Endpoints
 
 ### User Routes
@@ -50,9 +52,9 @@ This is a fully functional e-commerce web application built using React for the 
 
 ### Admin Routes
 
-- `POST /api/admin/login` - Authenticate the admin  
-    - `REQUEST BODY: {"email": "admin@forever.com", "password": "AdminForever21"}`
-    - `IDEAL RESPONSE: { "success": true, message ,token}`
+- `POST /api/admin/login` - Authenticate the admin
+  - `REQUEST BODY: {"email": "admin@forever.com", "password": "AdminForever21"}`
+  - `IDEAL RESPONSE: { "success": true, message ,token}`
 - `POST /api/admin/generate-discount` - Generate a discount code for every nth order (Requires Admin Token)
 - `GET /api/admin/stats` - Get store statistics (total items, purchase amounts, discount codes, etc.) (Requires Admin Token)
 
