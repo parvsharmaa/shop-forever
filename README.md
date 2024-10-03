@@ -50,9 +50,11 @@ This is a fully functional e-commerce web application built using React for the 
 
 ### Admin Routes
 
-- `POST /api/admin/login` - Admin login
-- `POST /api/admin/generate-discount` - Generate a discount code for every nth order
-- `GET /api/admin/stats` - Get store statistics (total items, purchase amounts, discount codes, etc.)
+- `POST /api/admin/login` - Authenticate the admin  
+    - `REQUEST BODY: {"email": "admin@forever.com", "password": "AdminForever21"}`
+    - `IDEAL RESPONSE: { "success": true, message ,token}`
+- `POST /api/admin/generate-discount` - Generate a discount code for every nth order (Requires Admin Token)
+- `GET /api/admin/stats` - Get store statistics (total items, purchase amounts, discount codes, etc.) (Requires Admin Token)
 
 ## Logical Flow for nth Order Discount Code
 
