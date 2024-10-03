@@ -47,7 +47,7 @@ const Checkout = () => {
 
   useEffect(() => {
     fetchCoupon();
-  }, []);
+  }, [token]);
 
   const onChangeHandler = (e) => {
     const name = e.target.name;
@@ -81,7 +81,7 @@ const Checkout = () => {
           items: orderItems,
           amount: getCartAmount() + delivery_fee,
           discountAmount: getCartAmount() * 0.1, // 10% discount
-          discountCode: coupon,
+          discountCode: couponApplied ? coupon : null,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
