@@ -56,6 +56,7 @@ Note : For Credentials, access environment variable files
   - `REQUEST BODY: {"email": "admin@forever.com", "password": "AdminForever21"}`
   - `IDEAL RESPONSE: { "success": true, message ,token}`
 - `POST /api/admin/generate-discount` - Generate a discount code for every nth order (Requires Admin Token)
+    - `REQUEST BODY: { userId }`
 - `GET /api/admin/stats` - Get store statistics (total items, purchase amounts, discount codes, etc.) (Requires Admin Token)
 
 ## Logical Flow for nth Order Discount Code
