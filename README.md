@@ -110,6 +110,20 @@ Note : For Credentials, access environment variable files
 - **Manual Management**:
   - The admin could use Postman to call this endpoint for generating discount codes at their discretion, perhaps to give away promotional codes or for special events.
 
+## Screenshots 
+
+### Home
+<img width="1679" alt="Screenshot 2024-10-03 at 4 19 32 AM" src="https://github.com/user-attachments/assets/d265e109-707c-42a2-9662-769c154ee43c">
+
+### Collection
+<img width="1679" alt="Screenshot 2024-10-03 at 4 20 00 AM" src="https://github.com/user-attachments/assets/c1ed8a03-3afb-445a-9c3d-812702d878b8">
+
+### Cart
+<img width="1679" alt="Screenshot 2024-10-03 at 4 20 14 AM" src="https://github.com/user-attachments/assets/c2b5980b-3170-4c1e-be9e-fa3f2e7abfba">
+
+### Checkout
+<img width="1679" alt="Screenshot 2024-10-03 at 4 19 20 AM" src="https://github.com/user-attachments/assets/695782ce-14d1-4e95-ae07-a207c2127067">
+
 ## Contributing
 
 If you'd like to contribute to this project, please fork the repository and submit a pull request with your changes.
