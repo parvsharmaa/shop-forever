@@ -11,19 +11,22 @@ const Navbar = () => {
     useContext(ShopContext);
   const [visible, setVisible] = useState(false);
 
+  // Logout function
   const logout = () => {
-    navigate('/login');
-    localStorage.removeItem('token');
-    setToken('');
-    setCartItems({});
+    navigate('/login'); // Redirect to login page
+    localStorage.removeItem('token'); // Remove token from local storage
+    setToken(''); // Clear token state
+    setCartItems({}); // Clear cart items
   };
 
   return (
     <div className='flex items-center font-medium py-5 justify-between'>
+      {/* Logo */}
       <Link to='/'>
         <img src={assets.logo} className='w-36' alt='' />
       </Link>
 
+      {/* Navigation Links */}
       <ul className='hidden sm:flex gap-5 text-sm text-gray-700'>
         <NavLink to='/' className='flex flex-col items-center gap-1'>
           <p>Home</p>
@@ -39,11 +42,14 @@ const Navbar = () => {
         </NavLink>
       </ul>
 
+      {/* Right Side Icons */}
       <div className='flex items-center gap-6'>
         <FaSearch className='w-5 cursor-pointer' />
+
+        {/* User Icon with Dropdown */}
         <div className='group relative'>
           <FaUser
-            onClick={() => (token ? null : navigate('/login'))}
+            onClick={() => (token ? null : navigate('/login'))} // Redirect to login if not authenticated
             className='w-5 cursor-pointer'
           />
           {/* Dropdown Menu */}
@@ -52,32 +58,34 @@ const Navbar = () => {
               <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
                 <p
                   onClick={() => navigate('/orders')}
-                  className=' cursor-pointer hover:text-black'
+                  className='cursor-pointer hover:text-black'
                 >
                   Orders
                 </p>
-                <p
-                  onClick={logout}
-                  className=' cursor-pointer hover:text-black'
-                >
+                <p onClick={logout} className='cursor-pointer hover:text-black'>
                   Logout
                 </p>
               </div>
             </div>
           )}
         </div>
+
+        {/* Shopping Cart Icon */}
         <Link to='/cart' className='relative'>
-          <FaShoppingCart className='w-5  min-w-5' />
+          <FaShoppingCart className='w-5 min-w-5' />
           <p className='absolute right-[-6px] top-[-10px] w-4 text-center leading-4 bg-slate-200 text-black aspect-square rounded-full text-[8px]'>
             {getCartCount()}
           </p>
         </Link>
+
+        {/* Menu Icon for Mobile View */}
         <FiMenu
           onClick={() => setVisible(true)}
           className='w-5 cursor-pointer sm:hidden'
         />
       </div>
-      {/* Sidebar Menu for smaller screens*/}
+
+      {/* Sidebar Menu for smaller screens */}
       <div
         className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${
           visible ? 'w-full' : 'w-0'

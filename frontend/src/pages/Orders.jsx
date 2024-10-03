@@ -24,12 +24,12 @@ const Orders = () => {
             item['status'] = order.status;
             item['paymentMethod'] = order.paymentMethod;
             item['date'] = order.date;
-            // calculate per item price split
+            // Calculate per item price split
             item['price'] = (
               (order.couponCode ? item['price'] * 0.9 : item['price']) +
               delivery_fee / order.items.length
             ).toFixed(2);
-            // transforming order number
+            // Transforming order number
             item['orderId'] = index + 1;
 
             allOrderItems.push(item);
@@ -94,7 +94,7 @@ const Orders = () => {
               <div className='md:w-1/2 flex justify-between'>
                 <div className='flex items-center gap-2'>
                   <p className='min-w-2 h-2 rounded-full bg-green-500'></p>
-                  <p className='text-sm md:text-base '>{item.status}</p>
+                  <p className='text-sm md:text-base'>{item.status}</p>
                 </div>
                 <button className='bg-black text-white border px-4 py-2 text-sm font-medium rounded-sm hover:bg-gray-700'>
                   Track Order

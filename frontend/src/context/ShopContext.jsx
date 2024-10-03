@@ -6,19 +6,21 @@ import { toast } from 'react-toastify';
 export const ShopContext = createContext();
 
 const ShopContextProvider = ({ children }) => {
-  const currency = 'Rs. ';
-  const delivery_fee = 10;
-  const backendUrl = 'http://localhost:8080/api';
+  const currency = 'Rs. '; // Currency symbol
+  const delivery_fee = 10; // Delivery fee
+  const backendUrl = 'http://localhost:8080/api'; // Backend API URL
 
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const [token, setToken] = useState('');
 
+  // Hook to navigate between routes
   const navigate = useNavigate();
 
   const addToCart = async (itemId) => {
     let cartData = structuredClone(cartItems);
 
+    // Update cart data by adding the item
     if (cartData[itemId]) {
       cartData[itemId] += 1;
     } else {
@@ -26,7 +28,7 @@ const ShopContextProvider = ({ children }) => {
     }
     setCartItems(cartData);
 
-    // Now if we're logged in, update to cart to database too
+    // If the user is logged in, update the cart in the database
     if (token) {
       try {
         await axios.post(
@@ -45,6 +47,8 @@ const ShopContextProvider = ({ children }) => {
 
   const updateQuantity = async (itemId, quantity) => {
     let cartData = structuredClone(cartItems);
+
+    // Update cart data based on new quantity
     if (quantity === 0) {
       delete cartData[itemId];
     } else {
@@ -52,7 +56,7 @@ const ShopContextProvider = ({ children }) => {
     }
     setCartItems(cartData);
 
-    // Now if we're logged in, update to cart to database too
+    // If the user is logged in, update the cart in the database
     if (token) {
       try {
         await axios.post(
@@ -70,6 +74,7 @@ const ShopContextProvider = ({ children }) => {
   };
 
   const getCartCount = () => {
+    // Calculate total count of items in the cart
     return Object.values(cartItems).reduce((acc, curr) => acc + curr, 0);
   };
 
@@ -82,6 +87,7 @@ const ShopContextProvider = ({ children }) => {
     return totalAmount;
   };
 
+  // Fetch products from the backend
   const fetchProducts = async () => {
     try {
       const response = await axios.get(`${backendUrl}/product/list`);
@@ -95,6 +101,7 @@ const ShopContextProvider = ({ children }) => {
     }
   };
 
+  // Fetch user's cart from the backend
   const getUserCart = async (token) => {
     try {
       const response = await axios.post(
@@ -115,10 +122,12 @@ const ShopContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    // Fetch products on mount
     fetchProducts();
   }, []);
 
   useEffect(() => {
+    // Check for token in localStorage and fetch user cart if found
     if (!token && localStorage.getItem('token')) {
       setToken(localStorage.getItem('token'));
       getUserCart(localStorage.getItem('token'));
@@ -141,6 +150,7 @@ const ShopContextProvider = ({ children }) => {
     setToken,
   };
 
+  // Provide context value to children components
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
 };
 

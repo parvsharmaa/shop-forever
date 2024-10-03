@@ -5,14 +5,20 @@ import Title from './Title';
 const CartTotal = ({ couponApplied }) => {
   const { currency, delivery_fee, getCartAmount } = useContext(ShopContext);
 
+  // Function to calculate the total amount in the cart
   const getCartTotal = () => {
     const cartTotal = getCartAmount();
 
+    // If the cart is empty, return 0
     if (cartTotal === 0) {
       return 0;
-    } else if (couponApplied) {
+    }
+    // If a coupon is applied, apply the discount
+    else if (couponApplied) {
       return (cartTotal * 0.9 + delivery_fee).toFixed(2);
-    } else {
+    }
+    // If no coupon is applied, just add the delivery fee
+    else {
       return (cartTotal + delivery_fee).toFixed(2);
     }
   };
@@ -37,17 +43,19 @@ const CartTotal = ({ couponApplied }) => {
           </p>
         </div>
         <hr />
+        {/* Coupon Discount section, only visible if a coupon is applied */}
         {couponApplied && (
           <>
             <div className='flex justify-between'>
               <p>Coupon Discount</p>
               <p>
-                {currency} {(getCartAmount() * 0.1).toFixed(2)}
+                {currency} {(getCartAmount() * 0.1).toFixed(2)}{' '}
               </p>
             </div>
             <hr />
           </>
         )}
+        {/* Total amount */}
         <div className='flex justify-between'>
           <b>Total</b>
           <b>

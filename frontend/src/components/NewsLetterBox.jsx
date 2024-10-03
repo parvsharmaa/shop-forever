@@ -1,4 +1,5 @@
 const NewsLetterBox = () => {
+  // Handler for form submission
   const onSubmitHandler = (event) => {
     event.preventDefault();
   };
@@ -13,7 +14,7 @@ const NewsLetterBox = () => {
         products.
       </p>
       <form
-        onClick={onSubmitHandler}
+        onSubmit={onSubmitHandler}
         className='w-full sm:w-1/2 flex items-center gap-3 mx-auto my-6 border pl-3'
       >
         <input

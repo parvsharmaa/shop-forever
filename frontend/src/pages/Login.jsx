@@ -45,7 +45,7 @@ const Login = () => {
       className='flex flex-col items-center w-[90%] sm:max-w-96 m-auto mt-14 gap-4 text-gray-800'
     >
       <div className='inline-flex items-center gap-2 mb-2 mt-10'>
-        <p className='text 3x1'>{currentState}</p>
+        <p className='text-3xl'>{currentState}</p>
         <hr className='border-none h-[1.5px] w-8 bg-gray-800 ' />
       </div>
 
@@ -79,7 +79,7 @@ const Login = () => {
         />
 
         <div className='w-full flex justify-between text-sm mt-[-8px]'>
-          <p className=' cursor-pointer'>Forgot your password?</p>
+          <p className='cursor-pointer'>Forgot your password?</p>
           {currentState === 'Login' ? (
             <p
               onClick={() => setCurrentState('Sign Up')}
@@ -96,7 +96,7 @@ const Login = () => {
             </p>
           )}
         </div>
-        <button className='w-1/2 m-auto bg-black text-white px-8 py-2 mt-4 '>
+        <button className='w-1/2 m-auto bg-black text-white px-8 py-2 mt-4'>
           {currentState === 'Login' ? 'Sign In' : 'Sign Up'}
         </button>
       </div>

@@ -16,6 +16,7 @@ const Checkout = () => {
     delivery_fee,
     products,
   } = useContext(ShopContext);
+
   const [method, setMethod] = useState('cod');
   const [coupon, setCoupon] = useState(null);
   const [couponApplied, setCouponApplied] = useState(false);
@@ -31,6 +32,7 @@ const Checkout = () => {
     phone: '',
   });
 
+  // Fetch the coupon from the backend
   const fetchCoupon = async () => {
     try {
       const response = await axios.get(`${backendUrl}/user/coupon`, {
@@ -49,26 +51,27 @@ const Checkout = () => {
     fetchCoupon();
   }, [token]);
 
+  // Handle input changes for the form
   const onChangeHandler = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-
+    const { name, value } = e.target;
     setFormData((data) => ({ ...data, [name]: value }));
   };
 
+  // Handle form submission
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
     try {
       let orderItems = [];
 
-      for (const items in cartItems) {
-        if (cartItems[items] > 0) {
+      // Construct order items based on cart items
+      for (const item in cartItems) {
+        if (cartItems[item] > 0) {
           const itemInfo = structuredClone(
-            products.find((product) => product._id.toString() === items)
+            products.find((product) => product._id.toString() === item)
           );
           if (itemInfo) {
-            itemInfo.quantity = cartItems[items];
+            itemInfo.quantity = cartItems[item];
             orderItems.push(itemInfo);
           }
         }
@@ -80,11 +83,13 @@ const Checkout = () => {
           address: formData,
           items: orderItems,
           amount: getCartAmount() + delivery_fee,
-          discountAmount: getCartAmount() * 0.1, // 10% discount
+          // Apply discount only if coupon is applied
+          discountAmount: couponApplied ? getCartAmount() * 0.1 : 0,
           discountCode: couponApplied ? coupon : null,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       if (response.data.success) {
         setCartItems({});
         navigate('/orders');
@@ -93,11 +98,15 @@ const Checkout = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error('Failed to place order. Please try again.');
     }
   };
 
   return (
-    <form className='flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t'>
+    <form
+      className='flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t'
+      onSubmit={onSubmitHandler}
+    >
       {/* Left */}
       <div className='flex flex-col gap-4 w-full sm:max-w-[480px]'>
         <div className='text-xl sm:text-2xl my-3'>
@@ -187,7 +196,7 @@ const Checkout = () => {
           name='phone'
           value={formData.phone}
           className='border border-gray-300 rounded py-1.5 px-3.5 w-full'
-          type='Number'
+          type='tel'
           placeholder='Phone'
         />
       </div>
@@ -239,7 +248,7 @@ const Checkout = () => {
               <img
                 className='h-5 mx-4'
                 src='https://getlogo.net/wp-content/uploads/2020/10/unified-payments-interface-upi-logo-vector.png'
-                alt=''
+                alt='UPI Payment'
               />
             </div>
             <div
