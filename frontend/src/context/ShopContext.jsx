@@ -8,7 +8,7 @@ export const ShopContext = createContext();
 const ShopContextProvider = ({ children }) => {
   const currency = 'Rs. '; // Currency symbol
   const delivery_fee = 10; // Delivery fee
-  const backendUrl = 'http://localhost:8080/api'; // Backend API URL
+  const backendUrl = 'https://shop-forever.onrender.com/api'; // Backend API URL
 
   const [products, setProducts] = useState([]);
   const [cartItems, setCartItems] = useState({});
